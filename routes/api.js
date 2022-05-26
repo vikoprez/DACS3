@@ -81,4 +81,32 @@ router.post('/user/', (req, res, next) => {
     })
 })
 
+// Update an user
+router.patch('/user/:id', (req, res, next) => {
+    var data = {
+        name: req.body.name,
+        email: req.body.email,
+        password: req.body.password ? md5(req.body.password) : null
+    }
+    db.run(
+        `UPDATE user SET
+            name = COALESCE(?, name),
+            email = COALESCE(?, email),
+            name = COALESCE(?, name),
+            WHERE id = ?`,
+        [data.name, data.email, data.password, req.params.id],
+        function (err, result) {
+            if (err) {
+                res.status(400).json({'error': res.message})
+                return
+            }
+            res.json({
+                message: 'Success',
+                data: data,
+                changes: this.changes
+            })
+        }
+    )
+})
+
 module.exports = router
