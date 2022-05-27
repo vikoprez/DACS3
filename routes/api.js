@@ -5,7 +5,7 @@ var md5 = require("md5")
 
 // Get list of users
 router.get('/users', (req, res, next) => {
-    var sql = 'SELECT * FROM USER'
+    var sql = 'SELECT * FROM user'
     var params = []
 
     db.all(sql, params, (err, rows) => {
@@ -24,7 +24,7 @@ router.get('/users', (req, res, next) => {
 
 // Get user by id
 router.get('/user/:id', (req, res, next) => {
-    var sql = 'SELECT * FROM USER WHERE id = ?'
+    var sql = 'SELECT * FROM user WHERE id = ?'
     var params = [req.params.id]
 
     db.get(sql, params, (err, row) => {
@@ -126,6 +126,25 @@ router.delete('/user/:id', (req, res, next) => {
             })
         }
     )
+})
+
+// Get list of products
+router.get('/products', (req, res, next) => {
+    var sql = 'SELECT * FROM product'
+    var params = []
+
+    db.all(sql, params, (err, rows) => {
+        if (err) {
+            res.status(400).json({
+                'error': err.message
+            })
+            return
+        }
+        res.json({
+            'message': 'Success',
+            'data': rows
+        })
+    })
 })
 
 module.exports = router
